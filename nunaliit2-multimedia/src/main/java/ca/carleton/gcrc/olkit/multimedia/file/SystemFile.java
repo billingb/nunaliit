@@ -44,6 +44,7 @@ import ca.carleton.gcrc.utils.CommandUtils;
 public class SystemFile {
 
 	static private Pattern mp3IdentifierPattern = Pattern.compile("MPEG ADTS");
+	static private Pattern m4aIdentifierPattern = Pattern.compile("MPEG v4 system");
 
 	static public SystemFile getSystemFile(File file) throws Exception {
 		SystemFile result = new SystemFile();
@@ -67,7 +68,7 @@ public class SystemFile {
 		
 		// Parse line
 		String[] components = line.split(";");
-		
+
 		if( components.length > 0 ) {
 			String[] mimeTypes = components[0].split("\\\\012- ");
 			for(String mimeType : mimeTypes){
@@ -91,16 +92,19 @@ public class SystemFile {
 			List<String> tokens = new Vector<String>();
 			tokens.add("file");
 			tokens.add("-bnk");
-			tokens.add("--mime");
 			tokens.add(file.getAbsolutePath());
 			
 			BufferedReader br = CommandUtils.executeCommand(tokens);
 			String fullReport = br.readLine();
 			
 			Matcher mp3IdentifierMatcher = mp3IdentifierPattern.matcher(fullReport);
+			Matcher m4aIdentifierMatcher = m4aIdentifierPattern.matcher(fullReport);
+			System.out.println("fullReport: " + fullReport);
 			
 			if( mp3IdentifierMatcher.find() ) {
 				result.mimeType = "audio/mp3";
+			} else if( m4aIdentifierMatcher.find() ) {
+				result.mimeType = "audio/m4a";
 			}
 		}
 		
