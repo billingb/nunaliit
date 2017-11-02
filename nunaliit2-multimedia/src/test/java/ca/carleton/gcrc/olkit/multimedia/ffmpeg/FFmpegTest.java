@@ -212,6 +212,36 @@ public class FFmpegTest extends TestCase {
 			}
 		}
 	}
+
+	//Test m4a file with file command not knowing mime-type
+	public void testGetMediaInfo6() throws Exception {
+		if( false == TestConfiguration.isTestingConfigured() ) return;
+
+		FFmpegProcessor ffmpeg = FFmpeg.getProcessor(new MultimediaTestingProgress());
+
+		{
+			File file = TestConfiguration.getTestFile("voice_211_sd.m4a");
+			FFmpegMediaInfo info = ffmpeg.getMediaInfo(file);
+
+			if( info.getFile() != file ) {
+				fail("Unexpected file");
+			}
+			if( info.getBitRate() != 230000 ) {
+				fail("Unexpected bitrate: " + info.getBitRate());
+			}
+			if( info.getDurationInSec().intValue() != 2 ) {
+				fail("Unexpected duration: " + info.getDurationInSec().intValue());
+			}
+			//avprobe gives ident line: Input #0, mov,mp4,m4a,3gp,3g2,mj2,
+			//would be better is type was m4a, but code works as expected...
+			if( false == info.getFileType().equalsIgnoreCase("mov") ) {
+				fail("Unexpected file type: " + info.getFileType());
+			}
+			if( false == info.getAudioCodec().equals("aac") ) {
+				fail("Unexpected audio codec: " + info.getAudioCodec());
+			}
+		}
+	}
 	
 	public void testConvertVideo() throws Exception {
 		if( false == TestConfiguration.isTestingConfigured() ) return;

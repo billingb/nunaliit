@@ -44,7 +44,7 @@ public class SystemFileTest extends TestCase {
 		File file = TestConfiguration.getTestFile(fileName);
 
 		SystemFile sf = SystemFile.getSystemFile(file);
-		
+
 		if( null == expectedType  ) {
 			if(null != sf.getMimeType()) {
 				fail("Unexpected type.  Expected: "+expectedType+"  Returned: "+sf.getMimeType());
@@ -70,5 +70,11 @@ public class SystemFileTest extends TestCase {
 		if( false == TestConfiguration.isTestingConfigured() ) return;
 		
 		performFile("steps_sound.ogg", "audio/ogg");
+	}
+
+	public void testM4a() throws Exception {
+		if( false == TestConfiguration.isTestingConfigured() ) return;
+
+		performFile("voice_211_sd.m4a", "audio/m4a");
 	}
 }
